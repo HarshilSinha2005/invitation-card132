@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Birthday Invitation</title>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  /* Basic body and card setup */
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: radial-gradient(circle at top, #0f2027, #203a43, #2c5364);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+    color: #fff;
+    position: relative;
+  }
+
+  .card {
+    background: rgba(255, 255, 255, 0.05);
+    width: 90%;
+    max-width: 600px;
+    padding: 40px 30px;
+    border-radius: 20px;
+    box-shadow: 0px 20px 50px rgba(0,0,0,0.7);
+    text-align: center;
+    border: 1px solid rgba(255,255,255,0.15);
+    backdrop-filter: blur(15px);
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 1s ease;
+    position: relative;
+    z-index: 10;
+  }
+
+  .card.show { opacity: 1; transform: translateY(0); }
+
+  /* Text styles */
+  .quote { font-family: 'Great Vibes', cursive; font-size: 20px; color: #ffce54; margin-bottom: 20px; font-style: italic; }
+  .title { font-family: 'Great Vibes', cursive; font-size: 40px; font-weight: 600; margin-bottom: 10px; background: linear-gradient(90deg, #ff9a9e, #fad0c4, #a6c1ee); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .subtitle { font-size: 18px; color: #ccc; margin-bottom: 20px; font-weight: 300; }
+  .line { width: 100px; height: 3px; background: linear-gradient(to right, #ff9a9e, #fad0c4, #a6c1ee); margin: 20px auto; border-radius: 3px; animation: glow 2s infinite alternate; }
+  .name { font-family: 'Great Vibes', cursive; font-size: 32px; font-weight: 600; color: #ffce54; margin: 20px 0; }
+  .details { margin: 20px 0; }
+  .details p { font-size: 16px; margin: 10px 0; color: #e0e0e0; }
+  .footer { margin-top: 20px; font-style: italic; font-size: 16px; color: #f8f8f8; text-shadow: 0 0 8px rgba(255, 206, 84, 0.8); }
+  .rsvp { display: inline-block; margin-top: 20px; padding: 12px 25px; font-size: 16px; font-weight: 500; border-radius: 30px; color: #fff; border: none; cursor: pointer; background: linear-gradient(45deg, #ff6a00, #ee0979); box-shadow: 0 5px 15px rgba(255, 105, 135, 0.5); transition: all 0.3s ease; }
+  .rsvp:hover { transform: scale(1.08); box-shadow: 0 8px 25px rgba(255, 105, 135, 0.7); }
+
+  /* Animations */
+  @keyframes glow { from { box-shadow: 0px 0px 6px #ff9a9e; } to { box-shadow: 0px 0px 18px #a6c1ee; } }
+
+  .balloon {
+    position: absolute;
+    bottom: -150px;
+    height: auto;
+    animation: floatUp linear infinite;
+    z-index: 2;
+    cursor: pointer;
+  }
+
+  @keyframes floatUp { from { transform: translateY(0) rotate(0deg); opacity: 1; } to { transform: translateY(-120vh) rotate(20deg); opacity: 0; } }
+
+  .popup {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #162447;
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 10px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.5s ease;
+    z-index: 20;
+  }
+  .popup.show { opacity: 1; transform: translateY(0); }
+
+  /* Responsive adjustments */
+  @media (max-width: 480px) {
+    .title { font-size: 28px; }
+    .name { font-size: 24px; }
+    .quote, .subtitle, .details p, .footer { font-size: 14px; }
+    .rsvp { padding: 10px 20px; font-size: 14px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="card" id="inviteCard">
+  <div class="quote">“A birthday is not the end of another year, but the start of a new one.”</div>
+  <div class="title">Birthday Celebration</div>
+  <div class="subtitle">You are warmly invited to join us for</div>
+  <div class="line"></div>
+
+  <div class="name">Aarav’s 10th Birthday</div>
+
+  <div class="details">
+    <p><strong>Date:</strong> 4th October 2025</p>
+    <p><strong>Time:</strong> 6:30 PM onwards</p>
+    <p><strong>Venue:</strong> 1st Floor, Kant Arcade, Cross-Road,<br> near Piplag, Piplag, Nadiad,<br> Gujarat 387355</p>
+  </div>
+
+  <div class="line"></div>
+  <div class="footer">“Life should not only be lived, it should be celebrated.”</div>
+  <button class="rsvp" id="rsvpBtn">Confirm Attendance</button>
+</div>
+
+<div class="popup" id="popup">✅ Thank you for confirming! See you at the party 🎉</div>
+<audio id="popSound" src="sounds/pop.mp3" preload="auto"></audio>
+
+<script>
+// Show card animation
+window.addEventListener("load", () => document.getElementById("inviteCard").classList.add("show"));
+
+// RSVP popup
+const rsvpBtn = document.getElementById("rsvpBtn");
+const popup = document.getElementById("popup");
+rsvpBtn.addEventListener("click", () => {
+  popup.classList.add("show");
+  setTimeout(() => popup.classList.remove("show"), 3000);
+});
+
+// Balloons
+const balloonImgs = ["balloons/red.png","balloons/blue.png","balloons/pink.png"];
+
+function createBalloon(){
+  let balloon = document.createElement("img");
+  balloon.src = balloonImgs[Math.floor(Math.random()*balloonImgs.length)];
+  balloon.classList.add("balloon");
+
+  // Random position & size
+  balloon.style.left = Math.random()*window.innerWidth + "px";
+  balloon.style.width = (70 + Math.random()*50) * (window.innerWidth<500 ? 0.7 : 1) + "px"; // smaller on mobile
+
+  balloon.style.animationDuration = (5+Math.random()*5)+"s";
+  balloon.style.transform = `rotate(${Math.random()*360}deg)`;
+
+  balloon.addEventListener("click", ()=>{
+    document.getElementById("popSound").play();
+    balloon.remove();
+  });
+
+  document.body.appendChild(balloon);
+  setTimeout(()=>balloon.remove(),12000);
+}
+
+// Generate balloons frequently
+setInterval(createBalloon, 200);
+</script>
+</body>
+</html>
